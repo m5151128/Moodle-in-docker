@@ -1,0 +1,32 @@
+version: '3'
+services:
+  moodle:
+    image: bitnami/moodle:4.2.1-debian-11-r22
+    ports:
+      - '8080:8080'
+      - '8443:8443'
+    environment:
+      BITNAMI_DEBUG: true
+      MOODLE_DATABASE_TYPE: pgsql
+      MOODLE_DATABASE_HOST: moodle_db
+      MOODLE_DATABASE_PORT_NUMBER: 5432
+      MOODLE_DATABASE_NAME: moodle
+      MOODLE_DATABASE_USER: moodle_user
+      MOODLE_DATABASE_PASSWORD: password
+      ALLOW_EMPTY_PASSWORD: no
+    volumes:
+      - './moodle:/bitnami/moodle'
+
+  moodle_db:
+    image: postgres:15
+    container_name: postgres-db
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: moodle_user
+      POSTGRES_DB: moodle
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: "Asia/Tokyo"
